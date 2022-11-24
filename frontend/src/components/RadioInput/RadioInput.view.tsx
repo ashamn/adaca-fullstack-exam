@@ -19,9 +19,9 @@ const RadioInput = (props: RadioInputProps) => {
           data-testid="radio-input-control"
           type="radio"
           value={value}
-          checked={disabled}
-          disabled={checked}
-          onChange={() => ''}
+          checked={checked}
+          disabled={disabled}
+          onChange={(e) => onSelect(e.target.value)}
         />
         {label}
       </label>

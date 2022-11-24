@@ -107,4 +107,3 @@ test("Rules are working [2]", () => {
   const disabled20 = screen.getByLabelText("Steamed rice");
   expect(disabled20).toBeDisabled();
 });
-

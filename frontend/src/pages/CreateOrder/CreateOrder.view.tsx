@@ -10,7 +10,11 @@ const CreateOrderView = (props: CreateOrderProps) => {
   const [selectedItems, updateSelectedItems] = useReducer(
     (state: SelectedItems, newState: SelectedItems) => {
       // TODO: Merge selectedItems state with newState
-      return state
+      state = {
+        ...state,
+        ...newState,
+      };
+      return state;
     },
     {
       0: "",
@@ -25,8 +29,13 @@ const CreateOrderView = (props: CreateOrderProps) => {
 
   const blacklist: number[] = useMemo(() => {
     // TODO: Create a blacklist based on rules and currently selected items
-    return [];
-   
+    return Object.values(selectedItems).reduce((acc: number[], curr) => {
+      const ruleVal = rules?.[parseInt(curr)];
+      if (ruleVal) {
+        acc = [...acc, ...ruleVal];
+      }
+      return acc;
+    }, []);
   }, [rules, selectedItems]);
 
   const isDisabled = (id: string) => {
@@ -46,6 +55,10 @@ const CreateOrderView = (props: CreateOrderProps) => {
 
   // TODO: If no items are available, show a "Loading..." text
 
+  if (!items.length) {
+    return <React.Fragment>Loading...</React.Fragment>;
+  }
+
   return (
     <div className="createOrder">
       <form onSubmit={handleSubmit}>
@@ -54,7 +67,17 @@ const CreateOrderView = (props: CreateOrderProps) => {
             <div key={groupIndex}>
               {group.map((item) => {
                 // TODO: Should render RadioInput component
-                return <div />
+                return (
+                  <div key={item.id}>
+                    <RadioInput
+                      label={item.value}
+                      value={item.id}
+                      checked={isSelected(item.id, groupIndex)}
+                      disabled={isDisabled(item.id)}
+                      onSelect={(itm) => handleSelection(itm, groupIndex)}
+                    />
+                  </div>
+                );
               })}
               <br />
             </div>
